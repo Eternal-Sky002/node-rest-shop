@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 
 const productRouters = require('./api/routes/products');
 const orderRouters = require('./api/routes/orders');
+const userRouters = require('./api/routes/user');
 
 // Konfigurasi MongoDB
 mongoose.connect(
@@ -34,6 +35,7 @@ app.use((req, res, next) => {
 // Daftar Routes
 app.use('/products', productRouters);
 app.use('/orders', orderRouters);
+app.use('/user', userRouters);
 
 // Error Handle
 app.use((req, res, next) => {
