@@ -4,9 +4,43 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
-const productRouters = require('./api/routes/products');
-const orderRouters = require('./api/routes/orders');
-const userRouters = require('./api/routes/user');
+const swaggerUi = require('swagger-ui-express');
+const swaggerJSDoc = require('swagger-jsdoc');
+const port = 8080;
+
+// Swagger definition
+const swaggerOptions = {
+    swaggerDefinition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'My API',
+            version: '1.0.0',
+            description: 'API Node JS',
+        },
+        servers: [
+            {
+                url: `http://localhost:${port}`,
+            },
+        ],
+    components: {
+    securitySchemes: {
+        bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT', 
+        },
+    },
+},
+    },
+    apis: ['./api/routes/*.js'], // Path to your API docs
+};
+
+const swaggerDocs = swaggerJSDoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+});
 
 // Konfigurasi MongoDB
 mongoose.connect(
@@ -17,6 +51,10 @@ app.use(morgan('dev'));
 app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+app.use((req, res, next) => {
+    console.log(`Incoming req: ${req.method} ${req.url}`);
+    next();
+})
 
 // Konfigurasi CORS
 app.use((req, res, next) => {
@@ -31,6 +69,11 @@ app.use((req, res, next) => {
     }
     next();
 });
+
+
+const productRouters = require('./api/routes/products');
+const orderRouters = require('./api/routes/orders');
+const userRouters = require('./api/routes/user');
 
 // Daftar Routes
 app.use('/products', productRouters);
