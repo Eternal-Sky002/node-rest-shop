@@ -6,7 +6,7 @@ const Product = require('../models/product');
 exports.orders_get_all = (req, res, next) => {
     Order.find()
     // memilih objek apa saja yang tampil
-    .select("product quantity _id")
+    .select("product quantity _id totalPrice")
     // Untuk melihat isi dari product
     .populate('product', '_id name price')
     .exec()
@@ -20,6 +20,7 @@ exports.orders_get_all = (req, res, next) => {
                     _id: doc._id,
                     product: doc.product,
                     quantity: doc.quantity,
+                    totalPrice: doc.totalPrice,
                     request: {
                         type: "GET",
                         url: "http://localhost:3000/orders/" + doc._id
@@ -50,7 +51,8 @@ exports.orders_create_order = (req, res, next) => {
         const order = new Order({
             _id: new mongoose.Types.ObjectId(),
             product: req.body.productId,
-            quantity: req.body.quantity
+            quantity: req.body.quantity,
+            totalPrice: req.body.quantity * product.price
         })
         return order.save();
     })
@@ -61,6 +63,7 @@ exports.orders_create_order = (req, res, next) => {
                 _id: result._id,
                 product: result.product,
                 quantity: result.quantity,
+                totalPrice: result.totalPrice,
                 request: {
                     type: "GET",
                     url: "http://localhost:3000/orders/" + result._id
@@ -88,6 +91,7 @@ exports.orders_get_by_id = (req, res, next) => {
                 _id: doc.id,
                 product: doc.product,
                 quantity: doc.quantity,
+                totalPrice: doc.totalPrice,
                 request: {
                     type: "GET",
                     url: "http://localhost:3000/orders/"

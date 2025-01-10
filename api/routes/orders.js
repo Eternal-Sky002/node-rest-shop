@@ -53,6 +53,8 @@ const OrdersController = require('../controllers/orders');
  *                                      type: number
  *                       quantity:
  *                         type: number
+ *                       totalPrice:
+ *                         type: number
  *                       request:
  *                         type: object
  *                         properties:
