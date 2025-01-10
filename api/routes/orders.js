@@ -142,7 +142,7 @@ router.get('/:orderId', checkAuth, OrdersController.orders_get_by_id);
  *           schema:
  *             type: object
  *             properties:
- *               productId:
+ *               product:
  *                 type: string
  *               quantity:
  *                 type: number
